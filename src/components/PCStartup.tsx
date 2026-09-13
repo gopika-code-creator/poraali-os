@@ -69,9 +69,6 @@ export const PCStartup: React.FC<PCStartupProps> = ({ onComplete, soundEnabled }
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(timer);
-          setTimeout(() => {
-            setPhase('WELCOME');
-          }, 400);
           return 100;
         }
         return prev + 5;
@@ -80,6 +77,15 @@ export const PCStartup: React.FC<PCStartupProps> = ({ onComplete, soundEnabled }
 
     return () => clearInterval(timer);
   }, [phase]);
+
+  // Transition from SPLASH to WELCOME when progress reaches 100%
+  useEffect(() => {
+    if (phase !== 'SPLASH' || progress < 100) return;
+    const t = setTimeout(() => {
+      setPhase('WELCOME');
+    }, 400);
+    return () => clearTimeout(t);
+  }, [phase, progress]);
 
   // WELCOME DESKTOP HANDOFF
   useEffect(() => {

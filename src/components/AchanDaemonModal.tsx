@@ -4,13 +4,16 @@ import { sounds } from '../utils/sound';
 
 interface AchanDaemonModalProps {
   currentStress: number;
-  onBypassLockout: (stressDrop: number, achanDialogue: string, englishTranslation: string) => void;
+  onBypassLockout?: (stressDrop: number, achanDialogue: string, englishTranslation: string) => void;
+  onMediate?: () => void;
+  isOpen?: boolean;
   onClose: () => void;
 }
 
 export const AchanDaemonModal: React.FC<AchanDaemonModalProps> = ({
   currentStress,
   onBypassLockout,
+  onMediate,
   onClose
 }) => {
   const [activeTab, setActiveTab] = useState<'INTERVENE' | 'PAPER' | 'KSEB'>('INTERVENE');
@@ -18,10 +21,14 @@ export const AchanDaemonModal: React.FC<AchanDaemonModalProps> = ({
 
   const handleIntervention = (type: 'TEA' | 'EXCUSE' | 'KSEB') => {
     sounds.playKeyClick();
+    if (onMediate) {
+      onMediate();
+      return;
+    }
     if (type === 'TEA') {
       sounds.playSuccessChime();
       setLastActionLog("Achan adjusted his reading glasses, looked towards the kitchen, and cleared his throat.");
-      onBypassLockout(
+      onBypassLockout?.(
         35,
         "Shylaja... avan raavile thottu irunnu padikkunnu. Oru chaya koodi ittekkedo, paavam.",
         "Shylaja (Amma)... the child has been studying since morning. Just make one more cup of tea, poor kid."
@@ -29,7 +36,7 @@ export const AchanDaemonModal: React.FC<AchanDaemonModalProps> = ({
     } else if (type === 'EXCUSE') {
       sounds.playSuccessChime();
       setLastActionLog("Achan folded Malayala Manorama and gave a calm paternal nod.");
-      onBypassLockout(
+      onBypassLockout?.(
         25,
         "Vittukaledo... pillerayittalla athokke sheriyavum. Computer padikkatte.",
         "Let it go... they are just kids, they will learn. Let them study computer."
@@ -37,7 +44,7 @@ export const AchanDaemonModal: React.FC<AchanDaemonModalProps> = ({
     } else if (type === 'KSEB') {
       sounds.playInverterBeep();
       setLastActionLog("Achan took his trusty test-screwdriver and checked the sitout main fuse.");
-      onBypassLockout(
+      onBypassLockout?.(
         20,
         "Fuse poyathalla, KSEB-kar line cut cheythathaanu. 10 min-il varum.",
         "The fuse hasn't blown; KSEB just took a maintenance shutdown. Power will return in 10 mins."
@@ -46,24 +53,7 @@ export const AchanDaemonModal: React.FC<AchanDaemonModalProps> = ({
   };
 
   return (
-    <div className="win95-box flex flex-col h-full bg-[#c0c0c0] font-mono text-xs select-none shadow-2xl border-2 border-white">
-      {/* Title Bar */}
-      <div className="win95-titlebar px-2 py-1 flex items-center justify-between font-bold text-xs bg-[#000080] text-white">
-        <div className="flex items-center gap-1.5">
-          <ShieldCheck size={14} className="text-amber-300" />
-          <span>ACHAN_DAEMON.SYS - Paternal Intermediary Firewall Protocol</span>
-        </div>
-        <button
-          onClick={() => {
-            sounds.playKeyClick();
-            onClose();
-          }}
-          className="win95-btn w-4 h-4 flex items-center justify-center font-bold text-[10px] text-gray-900 cursor-pointer"
-        >
-          <X size={10} />
-        </button>
-      </div>
-
+    <div className="w-full h-full flex flex-col bg-[#c0c0c0] font-mono text-xs select-none">
       {/* Retro Banner */}
       <div className="p-2 border-b border-gray-400 bg-amber-50 text-amber-950 flex items-center gap-2">
         <div className="text-2xl">👴📰</div>

@@ -16,6 +16,7 @@ export const InterruptModal: React.FC<InterruptModalProps> = ({
   onTimeout
 }) => {
   const [timeLeft, setTimeLeft] = useState(interrupt.countdownSeconds);
+  const hasResolvedRef = React.useRef(false);
 
   useEffect(() => {
     // Play appropriate sound when interrupt appears
@@ -30,24 +31,31 @@ export const InterruptModal: React.FC<InterruptModalProps> = ({
     }
   }, [interrupt.type]);
 
-  // Countdown timer effect
+  // Countdown timer effect - strictly avoids calling onTimeout inside a state updater
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          onTimeout();
-          return 0;
-        }
-        if (interrupt.type === 'KSEB_TRIP' && prev % 4 === 0) {
-          sounds.playInverterBeep();
-        }
-        return prev - 1;
-      });
+    if (timeLeft <= 0) {
+      if (!hasResolvedRef.current) {
+        hasResolvedRef.current = true;
+        onTimeout();
+      }
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setTimeLeft(prev => Math.max(0, prev - 1));
+      if (interrupt.type === 'KSEB_TRIP' && (timeLeft - 1) % 4 === 0) {
+        sounds.playInverterBeep();
+      }
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [interrupt, onTimeout]);
+    return () => clearTimeout(timer);
+  }, [timeLeft, interrupt.type, onTimeout]);
+
+  const handleAction = (cmd: string) => {
+    if (hasResolvedRef.current) return;
+    hasResolvedRef.current = true;
+    onResolve(cmd);
+  };
 
   const getDaemonIcon = () => {
     switch (interrupt.type) {
@@ -144,14 +152,14 @@ export const InterruptModal: React.FC<InterruptModalProps> = ({
           {/* Action buttons */}
           <div className="flex flex-col sm:flex-row gap-2.5 pt-2.5 border-t border-gray-400">
             <button
-              onClick={() => onResolve(interrupt.primaryAction)}
+              onClick={() => handleAction(interrupt.primaryAction)}
               className="win95-btn win95-btn-emerald flex-1 py-2 px-3 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
             >
               <span>{interrupt.primaryAction}</span>
               <span className="text-[10px] text-emerald-200 font-normal">(Avert Disaster)</span>
             </button>
             <button
-              onClick={() => onResolve(interrupt.secondaryAction)}
+              onClick={() => handleAction(interrupt.secondaryAction)}
               className="win95-btn win95-btn-danger flex-1 py-2 px-3 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
             >
               <span>{interrupt.secondaryAction}</span>

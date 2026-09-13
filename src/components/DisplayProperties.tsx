@@ -43,24 +43,7 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
   ];
 
   return (
-    <div className="win95-box flex flex-col h-full bg-[#c0c0c0] font-mono text-xs select-none shadow-2xl border-2 border-white">
-      {/* Title bar */}
-      <div className="win95-titlebar px-2 py-1 flex items-center justify-between font-bold text-xs">
-        <div className="flex items-center gap-1.5">
-          <Monitor size={14} className="text-teal-300" />
-          <span>Display Properties [Desk.cpl] - Desktop Pattern</span>
-        </div>
-        <button
-          onClick={() => {
-            sounds.playKeyClick();
-            onClose();
-          }}
-          className="win95-btn w-4 h-4 flex items-center justify-center font-bold text-[10px] text-gray-900 cursor-pointer"
-        >
-          <X size={10} />
-        </button>
-      </div>
-
+    <div className="w-full h-full flex flex-col font-mono text-xs select-none bg-[#c0c0c0]">
       {/* Tabs */}
       <div className="flex border-b border-gray-400 px-2 pt-1 gap-1 text-[11px]">
         <div className="win95-box border-b-0 px-3 py-1 bg-[#c0c0c0] font-bold text-gray-900 -mb-[2px] z-10">

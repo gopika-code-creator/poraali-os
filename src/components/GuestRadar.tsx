@@ -34,21 +34,7 @@ export const GuestRadar: React.FC<GuestRadarProps> = ({ onClose, onSitoutAction 
   ];
 
   return (
-    <div className="win95-box w-full h-full flex flex-col font-mono text-xs select-none">
-      {/* Title Bar */}
-      <div className="win95-titlebar px-2 py-1 flex items-center justify-between font-bold">
-        <div className="flex items-center gap-1.5">
-          <Radio size={13} className="text-emerald-300 animate-pulse" />
-          <span>SIT-OUT RELATIVE RADAR SONAR v1.1</span>
-        </div>
-        <button
-          onClick={onClose}
-          className="win95-btn px-1.5 py-0 text-[10px] font-bold cursor-pointer"
-        >
-          ✕
-        </button>
-      </div>
-
+    <div className="w-full h-full flex flex-col font-mono text-xs select-none bg-[#c0c0c0]">
       <div className="p-3 bg-[#c0c0c0] flex-1 flex flex-col gap-3 overflow-y-auto">
         {/* Radar Screen Graphic */}
         <div className="win95-inset bg-black p-3 flex flex-col items-center justify-center relative overflow-hidden h-36">

@@ -53,22 +53,7 @@ export const HelpGuide: React.FC<HelpGuideProps> = ({ onClose, onExecuteCommand 
   ];
 
   return (
-    <div className="win95-window w-full h-full flex flex-col font-sans select-none bg-[#c0c0c0] shadow-2xl">
-      {/* Title Bar */}
-      <div className="win95-titlebar flex items-center justify-between px-2 py-1 bg-[#000080] text-white">
-        <div className="flex items-center gap-1.5 text-xs font-bold">
-          <HelpCircle size={14} className="text-yellow-300" />
-          <span>THARAVADU_95_SURVIVAL_GUIDE.HLP - User Manual</span>
-        </div>
-        <button
-          onClick={onClose}
-          className="win95-btn w-4 h-4 flex items-center justify-center p-0 font-bold text-black text-xs hover:bg-red-200"
-          title="Close Help"
-        >
-          <X size={10} />
-        </button>
-      </div>
-
+    <div className="w-full h-full flex flex-col font-sans select-none bg-[#c0c0c0]">
       {/* Retro Menu Bar */}
       <div className="flex items-center gap-3 px-2 py-1 text-xs border-b border-gray-400 bg-[#c0c0c0] text-gray-700">
         <span className="hover:bg-[#000080] hover:text-white px-1 cursor-pointer">File</span>

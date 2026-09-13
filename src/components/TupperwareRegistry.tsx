@@ -55,21 +55,7 @@ export const TupperwareRegistry: React.FC<TupperwareRegistryProps> = ({ onClose,
   };
 
   return (
-    <div className="win95-box w-full h-full flex flex-col font-mono text-xs select-none">
-      {/* Title Bar */}
-      <div className="win95-titlebar px-2 py-1 flex items-center justify-between font-bold">
-        <div className="flex items-center gap-1.5">
-          <Package size={13} className="text-yellow-300" />
-          <span>ADUKKALA TUPPERWARE & MILTON REGISTRY v2.4</span>
-        </div>
-        <button
-          onClick={onClose}
-          className="win95-btn px-1.5 py-0 text-[10px] font-bold cursor-pointer"
-        >
-          ✕
-        </button>
-      </div>
-
+    <div className="w-full h-full flex flex-col font-mono text-xs select-none bg-[#c0c0c0]">
       <div className="p-3 bg-[#c0c0c0] flex-1 flex flex-col gap-2.5 overflow-y-auto">
         <div className="win95-inset bg-amber-50 p-2 border border-amber-300 text-amber-950 text-[11px] leading-snug">
           <span className="font-bold">⚠️ AMMA STATUTE 404:</span> Any missing Tupperware container constitutes grand larceny against Tharavadu integrity. Prime suspect is always your friend Shaji or negligence from staring at your phone.

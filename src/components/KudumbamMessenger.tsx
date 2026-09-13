@@ -127,24 +127,7 @@ export const KudumbamMessenger: React.FC<KudumbamMessengerProps> = ({
   };
 
   return (
-    <div className="win95-box flex flex-col h-full bg-[#c0c0c0] font-mono text-xs select-none shadow-2xl border-2 border-white">
-      {/* Title Bar */}
-      <div className="win95-titlebar px-2 py-1 flex items-center justify-between font-bold text-xs bg-[#008080] text-white">
-        <div className="flex items-center gap-1.5">
-          <MessageSquare size={14} className="text-emerald-300" />
-          <span>Kudumbam 95 [Family WhatsApp Group Protocol v1.4]</span>
-        </div>
-        <button
-          onClick={() => {
-            sounds.playKeyClick();
-            onClose();
-          }}
-          className="win95-btn w-4 h-4 flex items-center justify-center font-bold text-[10px] text-gray-900 cursor-pointer"
-        >
-          <X size={10} />
-        </button>
-      </div>
-
+    <div className="w-full h-full flex flex-col font-mono text-xs select-none bg-[#c0c0c0]">
       {/* Retro Menu Bar */}
       <div className="flex gap-3 px-2 py-0.5 border-b border-gray-400 bg-[#dfdfdf] text-[11px] text-gray-800">
         <span className="hover:underline cursor-pointer">File</span>

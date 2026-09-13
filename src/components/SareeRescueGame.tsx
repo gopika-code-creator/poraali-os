@@ -84,15 +84,13 @@ export const SareeRescueGame: React.FC<SareeRescueGameProps> = ({
   useEffect(() => {
     if (gameState !== 'PLAYING') return;
 
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          evaluateEndGame();
-          return 0;
-        }
-        return prev - 1;
-      });
+    if (timeLeft <= 0) {
+      evaluateEndGame();
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setTimeLeft(prev => Math.max(0, prev - 1));
 
       // Increase rain intensity
       setRainIntensity(prev => Math.min(100, prev + 6));
@@ -105,8 +103,8 @@ export const SareeRescueGame: React.FC<SareeRescueGameProps> = ({
       }
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [gameState, clothes]);
+    return () => clearTimeout(timer);
+  }, [gameState, timeLeft, clothes]);
 
   // Handle unpegging an item
   const handleRescueItem = (item: ClothesLineItem) => {
@@ -159,24 +157,7 @@ export const SareeRescueGame: React.FC<SareeRescueGameProps> = ({
   };
 
   return (
-    <div className="win95-box flex flex-col h-full bg-[#c0c0c0] font-mono text-xs select-none shadow-2xl border-2 border-white">
-      {/* Title Bar */}
-      <div className="win95-titlebar px-2 py-1 flex items-center justify-between font-bold text-xs bg-[#000080] text-white">
-        <div className="flex items-center gap-1.5">
-          <CloudRain size={14} className="text-yellow-300" />
-          <span>MAZHA_RUN.EXE - Terrace Saree Rescue [Arcade]</span>
-        </div>
-        <button
-          onClick={() => {
-            sounds.playKeyClick();
-            onClose();
-          }}
-          className="win95-btn w-4 h-4 flex items-center justify-center font-bold text-[10px] text-gray-900 cursor-pointer"
-        >
-          <X size={10} />
-        </button>
-      </div>
-
+    <div className="w-full h-full flex flex-col font-mono text-xs select-none bg-[#c0c0c0]">
       {/* Retro Status HUD */}
       <div className="p-2 border-b border-gray-400 bg-[#dfdfdf] flex items-center justify-between">
         <div className="flex items-center gap-3">
