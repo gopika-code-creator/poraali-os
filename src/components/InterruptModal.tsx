@@ -142,20 +142,20 @@ export const InterruptModal: React.FC<InterruptModalProps> = ({
           </div>
 
           {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-gray-300">
+          <div className="flex flex-col sm:flex-row gap-2.5 pt-2.5 border-t border-gray-400">
             <button
               onClick={() => onResolve(interrupt.primaryAction)}
-              className="win95-btn flex-1 py-2 px-3 font-bold text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-900 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-transform"
+              className="win95-btn win95-btn-emerald flex-1 py-2 px-3 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
             >
               <span>{interrupt.primaryAction}</span>
-              <span className="text-[10px] opacity-75">(Avert Disaster)</span>
+              <span className="text-[10px] text-emerald-200 font-normal">(Avert Disaster)</span>
             </button>
             <button
               onClick={() => onResolve(interrupt.secondaryAction)}
-              className="win95-btn flex-1 py-2 px-3 font-bold text-xs bg-red-100 hover:bg-red-200 text-red-900 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-transform"
+              className="win95-btn win95-btn-danger flex-1 py-2 px-3 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
             >
               <span>{interrupt.secondaryAction}</span>
-              <span className="text-[10px] opacity-75">(High Risk)</span>
+              <span className="text-[10px] text-red-200 font-normal">(High Risk)</span>
             </button>
           </div>
         </div>

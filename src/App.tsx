@@ -16,14 +16,19 @@ import { SareeRescueGame } from './components/SareeRescueGame';
 import { KudumbamMessenger } from './components/KudumbamMessenger';
 import { AchanDaemonModal } from './components/AchanDaemonModal';
 import { HouseholdClock, TIME_SLOTS } from './components/HouseholdClock';
+import { PCStartup } from './components/PCStartup';
 import { sounds } from './utils/sound';
 import { DAEMON_INTERRUPTS, determineAmmaState, generateLocalResponse } from './utils/localEngine';
 import { getDesktopBackground, getDesktopStyle, DitherPatternType } from './utils/desktopTheme';
 import { AmmaOperatingState, DaemonInterrupt, DaemonType, TerminalEntry, HouseholdTimeSlot } from './types';
-import { Terminal, Activity, Package, Radio, CloudRain, Zap, Coffee, HelpCircle, BookOpen, Monitor, MessageSquare, ShieldCheck } from 'lucide-react';
+import { Terminal, Activity, Package, Radio, CloudRain, Zap, Coffee, HelpCircle, BookOpen, Monitor, MessageSquare, ShieldCheck, Power } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function App() {
+  // PC Startup State
+  const [isBooting, setIsBooting] = useState<boolean>(true);
+  const [autoTriggerEnabled, setAutoTriggerEnabled] = useState<boolean>(true);
+
   // Amma OS State
   const [stress, setStress] = useState<number>(45);
   const [state, setState] = useState<AmmaOperatingState>('SUSPICIOUS_SCAN');
@@ -122,6 +127,21 @@ export default function App() {
 
     return () => clearInterval(timer);
   }, []);
+
+  // Periodic Auto-Triggering Daemon (Background System Chaos Daemon)
+  useEffect(() => {
+    if (!autoTriggerEnabled || isBooting) return;
+
+    // Trigger random daemon every 55-80 seconds when no active modal is open
+    const delay = Math.floor(Math.random() * 25000) + 55000;
+    const daemonTimer = setTimeout(() => {
+      if (!activeInterrupt && stress < 90) {
+        triggerRandomDaemon();
+      }
+    }, delay);
+
+    return () => clearTimeout(daemonTimer);
+  }, [autoTriggerEnabled, isBooting, activeInterrupt, stress]);
 
   // Sync sounds manager
   const handleToggleSound = () => {
@@ -385,7 +405,22 @@ export default function App() {
       )}
 
       {/* Top Banner / Retro OS Watermark with Household Clock */}
-      <div className="absolute top-2 right-3 z-0 flex items-center gap-3">
+      <div className="flex-shrink-0 px-3 py-1.5 flex items-center justify-between z-10 select-none">
+        <div 
+          onClick={() => {
+            sounds.playKeyClick();
+            setWindows(prev => ({ ...prev, display: true }));
+            setFocusedWindow('display');
+          }}
+          className="cursor-pointer text-white/80 hover:text-white font-mono text-[11px] transition-colors flex items-center gap-2"
+          title="Click to open Display Properties [Desk.cpl]"
+        >
+          <div className="font-bold tracking-wider">THARAVADU 95 [BUILD 1995.08]</div>
+          <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded bg-black/40 ${desktopTheme.isAngryRed ? 'text-red-300 animate-pulse' : 'text-teal-200'}`}>
+            {desktopTheme.isAngryRed ? '🔥 ANGRY RED (>90% STRESS)' : desktopTheme.patternName}
+          </div>
+        </div>
+
         <HouseholdClock
           currentSlot={householdSlot}
           onSelectSlot={(slot) => {
@@ -417,25 +452,10 @@ export default function App() {
             }
           }}
         />
-
-        <div 
-          onClick={() => {
-            sounds.playKeyClick();
-            setWindows(prev => ({ ...prev, display: true }));
-            setFocusedWindow('display');
-          }}
-          className="cursor-pointer text-white/60 hover:text-white font-mono text-[11px] text-right transition-colors group hidden sm:block"
-          title="Click to open Display Properties [Desk.cpl]"
-        >
-          <div>THARAVADU 95 [BUILD 1995.08]</div>
-          <div className={`text-[10px] font-bold ${desktopTheme.isAngryRed ? 'text-red-300 animate-pulse' : 'text-teal-200'}`}>
-            BG: {desktopTheme.isAngryRed ? '🔥 ANGRY RED (>90% STRESS)' : desktopTheme.patternName}
-          </div>
-        </div>
       </div>
 
       {/* Desktop Workspace */}
-      <div className="flex-1 p-2 md:p-3 pb-11 overflow-hidden flex flex-col lg:flex-row gap-3 relative z-10">
+      <div className="flex-1 min-h-0 p-2 md:p-3 pb-2 overflow-hidden flex flex-col lg:flex-row gap-3 relative z-10">
         {/* Left Side: Desktop Icons (Hidden or scrollable on small screens) */}
         <div className="hidden md:flex flex-col gap-2 w-20 flex-shrink-0 z-10 overflow-y-auto max-h-full pr-1">
           {/* AMMA Terminal Icon */}
@@ -616,12 +636,31 @@ export default function App() {
               Display
             </span>
           </button>
+
+          {/* Reboot PC / Power Icon */}
+          <button
+            onClick={() => {
+              sounds.playKeyClick();
+              setIsBooting(true);
+            }}
+            className="flex flex-col items-center gap-1 p-1 text-white hover:bg-red-600/40 rounded cursor-pointer group"
+          >
+            <div className="w-10 h-10 win95-box bg-red-100 border border-white flex items-center justify-center shadow-md">
+              <Power size={22} className="text-red-700" />
+            </div>
+            <span 
+              className="text-[10px] text-center font-mono leading-tight px-0.5 group-hover:bg-red-800 transition-colors duration-300 font-bold text-red-200"
+              style={{ backgroundColor: desktopTheme.labelBgColor }}
+            >
+              Restart PC
+            </span>
+          </button>
         </div>
 
         {/* Center: Main Primary AMMA_KERNEL Window */}
-        <div className="flex-1 flex flex-col win95-box shadow-2xl h-full overflow-hidden z-20">
+        <div className="flex-1 min-h-0 flex flex-col win95-box shadow-2xl overflow-hidden z-20">
           {/* Window Title Bar */}
-          <div className="win95-titlebar px-2 py-1 flex items-center justify-between font-bold text-xs select-none">
+          <div className="flex-shrink-0 win95-titlebar px-2 py-1 flex items-center justify-between font-bold text-xs select-none">
             <div className="flex items-center gap-2">
               <Terminal size={14} className="text-emerald-300" />
               <span>THARAVADU 95 - AMMA_KERNEL.SYS (PID 0)</span>
@@ -655,7 +694,7 @@ export default function App() {
           </div>
 
           {/* Window Body: Terminal Console */}
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
             <TerminalConsole
               entries={entries}
               onExecuteCommand={handleExecuteCommand}
@@ -670,14 +709,14 @@ export default function App() {
         </div>
 
         {/* Right Side / Sidebar: Amma Avatar & Real-time Stress Gauge */}
-        <div className="w-full lg:w-80 flex flex-col sm:flex-row lg:flex-col gap-2.5 flex-shrink-0 z-20">
+        <div className="w-full lg:w-80 flex flex-col sm:flex-row lg:flex-col gap-2 flex-shrink-0 z-20 overflow-y-auto max-h-full pr-0.5">
           {/* Amma Portrait Avatar Card */}
-          <div className="flex-1 sm:w-1/2 lg:w-full">
+          <div className="flex-shrink-0 sm:w-1/2 lg:w-full">
             <AmmaAvatar state={state} stress={stress} />
           </div>
 
           {/* Stress Gauge Card */}
-          <div className="flex-1 sm:w-1/2 lg:w-full">
+          <div className="flex-shrink-0 sm:w-1/2 lg:w-full">
             <StressGauge
               stress={stress}
               state={state}
@@ -690,7 +729,7 @@ export default function App() {
           </div>
 
           {/* Quick House Daemons Panel */}
-          <div className="win95-box p-2 hidden sm:flex flex-col gap-1 text-[11px] font-mono">
+          <div className="flex-shrink-0 win95-box p-2 hidden sm:flex flex-col gap-1 text-[11px] font-mono">
             <div className="text-[10px] font-bold text-gray-700 uppercase tracking-wider pb-1 border-b border-gray-300 flex items-center justify-between">
               <span>DAEMON SHORTCUTS:</span>
               <span className="text-[9px] text-gray-500">CLICK TO TRIGGER</span>
@@ -1035,6 +1074,9 @@ export default function App() {
         state={state}
         clockTime={clockTime}
         onQuickInterrupt={triggerRandomDaemon}
+        autoTriggerEnabled={autoTriggerEnabled}
+        onToggleAutoTrigger={() => setAutoTriggerEnabled(!autoTriggerEnabled)}
+        onRestartPC={() => setIsBooting(true)}
       />
 
       {/* 100% Stress Blue Screen of Death (BSOD) */}
@@ -1044,6 +1086,16 @@ export default function App() {
           onRecover={handleBsodRecover}
         />
       )}
+
+      {/* PC Application Boot Sequence Overlay (Startup Animation & Sound) */}
+      <AnimatePresence>
+        {isBooting && (
+          <PCStartup
+            soundEnabled={soundEnabled}
+            onComplete={() => setIsBooting(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

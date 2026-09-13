@@ -1,5 +1,5 @@
 import React from 'react';
-import { Terminal, Activity, Package, Radio, Monitor, Volume2, VolumeX, AlertCircle, HelpCircle, CloudRain, MessageSquare, ShieldCheck } from 'lucide-react';
+import { Terminal, Activity, Package, Radio, Monitor, Volume2, VolumeX, AlertCircle, HelpCircle, CloudRain, MessageSquare, ShieldCheck, Play, Pause, RotateCcw } from 'lucide-react';
 import { sounds } from '../utils/sound';
 import { AmmaOperatingState } from '../types';
 
@@ -17,6 +17,9 @@ interface TaskbarProps {
   state: AmmaOperatingState;
   clockTime: string;
   onQuickInterrupt: () => void;
+  autoTriggerEnabled: boolean;
+  onToggleAutoTrigger: () => void;
+  onRestartPC: () => void;
 }
 
 export const Taskbar: React.FC<TaskbarProps> = ({
@@ -32,7 +35,10 @@ export const Taskbar: React.FC<TaskbarProps> = ({
   stress,
   state,
   clockTime,
-  onQuickInterrupt
+  onQuickInterrupt,
+  autoTriggerEnabled,
+  onToggleAutoTrigger,
+  onRestartPC
 }) => {
   const getWindowIcon = (id: string) => {
     switch (id) {
@@ -67,7 +73,7 @@ export const Taskbar: React.FC<TaskbarProps> = ({
   };
 
   return (
-    <div className="h-9 win95-box fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between px-1 py-0.5 select-none font-mono text-xs">
+    <div className="h-9 win95-box flex-shrink-0 w-full z-40 flex items-center justify-between px-1 py-0.5 select-none font-mono text-xs">
       {/* Left side: Start button and Window Tabs */}
       <div className="flex items-center gap-1.5 h-full overflow-x-auto">
         {/* Windows 95 Start Button */}
@@ -114,17 +120,56 @@ export const Taskbar: React.FC<TaskbarProps> = ({
 
       {/* Right side: System Tray */}
       <div className="flex items-center gap-1 h-full pl-2">
+        {/* Auto-Triggering Daemon Interruption Mode */}
+        <button
+          onClick={() => {
+            sounds.playKeyClick();
+            onToggleAutoTrigger();
+          }}
+          title={autoTriggerEnabled ? 'Disable Auto-Triggering Daemons' : 'Enable Auto-Triggering Daemons (Random Kerala Household Chaos)'}
+          className={`win95-btn h-7 px-2 text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+            autoTriggerEnabled 
+              ? 'bg-amber-100 text-amber-900 border-amber-500 shadow-inner' 
+              : 'bg-[#c0c0c0] text-gray-700'
+          }`}
+        >
+          {autoTriggerEnabled ? (
+            <>
+              <Pause size={11} className="text-amber-700 animate-pulse" />
+              <span className="hidden sm:inline">AUTO: ON</span>
+            </>
+          ) : (
+            <>
+              <Play size={11} className="text-gray-600" />
+              <span className="hidden sm:inline">AUTO: OFF</span>
+            </>
+          )}
+        </button>
+
         {/* Quick interrupt trigger button */}
         <button
           onClick={() => {
             sounds.playKeyClick();
             onQuickInterrupt();
           }}
-          title="Simulate random household panic interrupt"
-          className="win95-btn h-7 px-1.5 text-[10px] font-bold text-red-900 bg-red-100 hover:bg-red-200 flex items-center gap-1 cursor-pointer"
+          title="Simulate immediate household panic interrupt"
+          className="win95-btn win95-btn-danger h-7 px-2 text-[10px] font-bold flex items-center gap-1 cursor-pointer"
         >
-          <AlertCircle size={12} className="text-red-600" />
-          <span className="hidden sm:inline">PANIC INTERRUPT</span>
+          <AlertCircle size={12} className="text-yellow-200 animate-bounce" />
+          <span className="hidden sm:inline">PANIC!</span>
+        </button>
+
+        {/* Restart PC Boot Screen Button */}
+        <button
+          onClick={() => {
+            sounds.playKeyClick();
+            onRestartPC();
+          }}
+          title="Restart Tharavadu PC & Play Boot Animation / Chime"
+          className="win95-btn h-7 px-1.5 text-[10px] font-bold text-slate-800 bg-[#c0c0c0] flex items-center gap-1 cursor-pointer"
+        >
+          <RotateCcw size={12} className="text-blue-700" />
+          <span className="hidden md:inline text-[10px]">RESTART</span>
         </button>
 
         {/* CRT Scanline Toggle */}

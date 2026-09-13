@@ -47,6 +47,17 @@
   border-right: 2px solid #808080;
   border-bottom: 2px solid #808080;
   box-shadow: 1px 1px 0px 0px #000000;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.win95-btn:hover {
+  filter: brightness(1.04);
+}
+
+.win95-btn:focus-visible {
+  outline: 1px dotted #000000;
+  outline-offset: -3px;
 }
 
 .win95-btn:active, .win95-btn-pressed {
@@ -55,6 +66,60 @@
   border-right: 2px solid #ffffff;
   border-bottom: 2px solid #ffffff;
   box-shadow: inset 1px 1px 0px 0px #000000;
+  transform: translate(1px, 1px);
+}
+
+/* Emerald themed action buttons */
+.win95-btn-emerald {
+  background-color: #15803d;
+  color: #ffffff;
+  border-top: 2px solid #4ade80;
+  border-left: 2px solid #4ade80;
+  border-right: 2px solid #14532d;
+  border-bottom: 2px solid #14532d;
+  box-shadow: 1px 1px 0px 0px #000000;
+}
+.win95-btn-emerald:active {
+  border-top: 2px solid #14532d;
+  border-left: 2px solid #14532d;
+  border-right: 2px solid #4ade80;
+  border-bottom: 2px solid #4ade80;
+  transform: translate(1px, 1px);
+}
+
+/* Amber themed panic / warning buttons */
+.win95-btn-amber {
+  background-color: #b45309;
+  color: #ffffff;
+  border-top: 2px solid #fde047;
+  border-left: 2px solid #fde047;
+  border-right: 2px solid #78350f;
+  border-bottom: 2px solid #78350f;
+  box-shadow: 1px 1px 0px 0px #000000;
+}
+.win95-btn-amber:active {
+  border-top: 2px solid #78350f;
+  border-left: 2px solid #78350f;
+  border-right: 2px solid #fde047;
+  border-bottom: 2px solid #fde047;
+  transform: translate(1px, 1px);
+}
+
+/* Crimson danger buttons */
+.win95-btn-danger {
+  background-color: #b91c1c;
+  color: #ffffff;
+  border-top: 2px solid #fca5a5;
+  border-left: 2px solid #fca5a5;
+  border-right: 2px solid #7f1d1d;
+  border-bottom: 2px solid #7f1d1d;
+  box-shadow: 1px 1px 0px 0px #000000;
+}
+.win95-btn-danger:active {
+  border-top: 2px solid #7f1d1d;
+  border-left: 2px solid #7f1d1d;
+  border-right: 2px solid #fca5a5;
+  border-bottom: 2px solid #fca5a5;
   transform: translate(1px, 1px);
 }
 

@@ -53,29 +53,43 @@ class SoundManager {
     }
   }
 
-  // Windows 95 style startup or success chord
+  // Windows 95 style startup or success chord - iconic Brian Eno style arpeggio
   public playStartup() {
     if (!this.soundEnabled) return;
     this.initContext();
     if (!this.ctx) return;
 
-    const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C4, E4, G4, C5, E5
-    notes.forEach((freq, idx) => {
-      if (!this.ctx) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.08);
+    try {
+      // Classic Win95 major pentatonic chime chords: Eb3, Bb3, Eb4, G4, Bb4, C5, Eb5
+      const chords = [
+        { freq: 155.56, time: 0.0, dur: 2.2, type: 'triangle' as OscillatorType, vol: 0.12 }, // Eb3 deep root
+        { freq: 233.08, time: 0.1, dur: 2.0, type: 'sine' as OscillatorType, vol: 0.14 }, // Bb3
+        { freq: 311.13, time: 0.25, dur: 1.8, type: 'triangle' as OscillatorType, vol: 0.12 }, // Eb4
+        { freq: 392.00, time: 0.45, dur: 1.6, type: 'sine' as OscillatorType, vol: 0.13 }, // G4
+        { freq: 466.16, time: 0.65, dur: 1.5, type: 'triangle' as OscillatorType, vol: 0.11 }, // Bb4
+        { freq: 523.25, time: 0.85, dur: 1.4, type: 'sine' as OscillatorType, vol: 0.10 }, // C5
+        { freq: 622.25, time: 1.05, dur: 1.8, type: 'triangle' as OscillatorType, vol: 0.12 }, // Eb5 chime peak
+      ];
 
-      gain.gain.setValueAtTime(0, this.ctx.currentTime + idx * 0.08);
-      gain.gain.linearRampToValueAtTime(0.07, this.ctx.currentTime + idx * 0.08 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.08 + 0.5);
+      chords.forEach(({ freq, time, dur, type, vol }) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + time);
 
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start(this.ctx.currentTime + idx * 0.08);
-      osc.stop(this.ctx.currentTime + idx * 0.08 + 0.6);
-    });
+        gain.gain.setValueAtTime(0, this.ctx.currentTime + time);
+        gain.gain.linearRampToValueAtTime(vol, this.ctx.currentTime + time + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + time + dur);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(this.ctx.currentTime + time);
+        osc.stop(this.ctx.currentTime + time + dur + 0.1);
+      });
+    } catch {
+      // AudioContext fallback
+    }
   }
 
   // Classic Windows 95 error chord / Amma scold sound

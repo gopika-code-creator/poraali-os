@@ -138,7 +138,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({
     <motion.div 
       animate={isHighStress ? { x: [-1, 1, -1, 1, 0] } : {}}
       transition={{ duration: 0.2, repeat: isHighStress ? Infinity : 0 }}
-      className="flex flex-col h-full bg-[#0a0e14] text-emerald-400 font-mono select-text relative"
+      className="flex flex-col h-full min-h-0 bg-[#0a0e14] text-emerald-400 font-mono select-text relative"
     >
       {/* Optional CRT Scanline & Curvature Filter */}
       {crtFilter && (
@@ -146,7 +146,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({
       )}
 
       {/* Terminal Top Info Bar */}
-      <div className="flex items-center justify-between px-3 py-1.5 bg-slate-900 border-b border-slate-800 text-[11px] text-slate-400 select-none z-20">
+      <div className="flex-shrink-0 flex items-center justify-between px-3 py-1.5 bg-slate-900 border-b border-slate-800 text-[11px] text-slate-400 select-none z-20">
         <div className="flex items-center gap-2">
           <motion.span 
             animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
@@ -211,7 +211,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({
       </div>
 
       {/* Terminal Output Log Area */}
-      <div className="flex-1 overflow-y-auto p-3.5 space-y-4 text-xs leading-relaxed z-0">
+      <div className="flex-1 min-h-0 overflow-y-auto p-3.5 space-y-4 text-xs leading-relaxed z-0">
         <AnimatePresence initial={false}>
           {entries.map((item) => (
             <motion.div 
@@ -315,7 +315,7 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({
       </div>
 
       {/* 4. Required: 3 Quick Command Options user can click or type */}
-      <div className="bg-slate-900/95 border-t border-slate-800 p-2 z-20 space-y-2">
+      <div className="flex-shrink-0 bg-slate-900/95 border-t border-slate-800 p-2 z-20 space-y-2">
         {/* Dynamic Context Suggestions */}
         <div>
           <div className="flex items-center justify-between mb-1 px-1">
@@ -457,10 +457,10 @@ export const TerminalConsole: React.FC<TerminalConsoleProps> = ({
           <button
             type="submit"
             disabled={isProcessing || !inputVal.trim()}
-            className="win95-btn px-3 py-1.5 text-xs font-bold text-slate-900 flex items-center gap-1 cursor-pointer disabled:opacity-40 active:scale-95 transition-transform"
+            className="win95-btn win95-btn-emerald px-3.5 py-1.5 text-xs font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
           >
-            <span>EXEC</span>
-            <Send size={12} />
+            <span>EXECUTE</span>
+            <Send size={12} className="text-emerald-200" />
           </button>
         </form>
       </div>
